@@ -11,6 +11,10 @@
             align-items: center;
         }
     </style>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" type="text/css" href=" https://fonts.googleapis.com/css?family=Pacifico" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
 <style>
@@ -65,7 +69,14 @@
     </div>
 
 </div>
-
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="config.js"></script>
 <script>
     function onResolutionChange(value) {
         const contents = document.querySelectorAll('.content-container');
@@ -76,7 +87,86 @@
                 content.style.display = 'none';
             }
         });
-    }
+    };
+    window.onload = function() {
+        Swal.fire({
+            title: CONFIG.question,
+            html: true,
+            width: 900,
+            padding: '3em',
+            // html: "<input type='text' class='form-control' id='txtReason' onmousemove=textGenerate()  placeholder='Whyyy'>",
+            html: "<input type='text' class='form-control' id='txtReason' placeholder='Cô nhập ở đây để em ship, nước free nhưng có phí ship nhé 😂 !!!' >",
+            background: '#fff url("images/iput-bg.jpg")',
+            // backdrop: `
+            //       rgba(0,0,123,0.4)
+            //       url("img/giphy2.gif")
+            //       left top
+            //       no-repeat
+            //     `,
+            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#fe8a71',
+            confirmButtonText: CONFIG.btnReply,
+            onOpen: () => {
+                // Focus the input element after the modal is open
+                document.getElementById('txtReason').focus();
+            },
+            onClose: () => {
+                replyMes = document.getElementById('txtReason').value;
+                
+                const webhookUrl = 'https://webhook-test.com/f8e041fc4c441265a5c4b0135408d243';
+                fetch(webhookUrl, {
+                    method: 'POST',
+                    mode: 'no-cors', // Set to no-cors
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        button: 'Message From Crush',
+                        message: replyMes,
+                        timestamp: new Date().toLocaleString('en-US', {timeZone: 'Asia/Ho_Chi_Minh'}),
+                    }),
+                })
+                .then(() => {
+                    // Redirect after logging the click
+                    console.log('log message:' + replyMes);
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }).then((result) => {
+            if (result.value) {
+                Swal.fire({
+                    width: 900,
+                    confirmButtonText: CONFIG.btnAccept,
+                    background: '#fff url("images/iput-bg.jpg")',
+                    title: CONFIG.mess,
+                    text: CONFIG.messDesc,
+                    confirmButtonColor: '#83d0c9',
+                    onClose: () => {
+                        const webhookUrl = 'https://webhook-test.com/f8e041fc4c441265a5c4b0135408d243';
+                        fetch(webhookUrl, {
+                            method: 'POST',
+                            mode: 'no-cors', // Set to no-cors
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                button: 'Accept invitaion',
+                                message: 'Okiiiii lun <3',
+                                timestamp: new Date().toLocaleString('en-US', {timeZone: 'Asia/Ho_Chi_Minh'}),
+                            }),
+                        })
+                        .then(() => {
+                            // Redirect after logging the click
+                            console.log('log message:Oke'); // Change this to your desired URL
+                        })
+                        .catch(error => console.error('Error:', error));
+                        
+                      }
+                })
+            }
+        })
+    };
+
 </script>
 </body>
 </html>
