@@ -1,0 +1,84 @@
+<script>
+    var replyMes
+    $('#yes').click(function() {
+        var audio = new Audio('sound/tick.mp3');
+        audio.play();
+        Swal.fire({
+            title: CONFIG.question,
+            html: true,
+            width: 900,
+            padding: '3em',
+            // html: "<input type='text' class='form-control' id='txtReason' onmousemove=textGenerate()  placeholder='Whyyy'>",
+            html: "<input type='text' class='form-control' id='txtReason' placeholder='Pls, LMK??' >",
+            background: '#fff url("img/iput-bg.jpg")',
+            backdrop: `
+                  rgba(0,0,123,0.4)
+                  url("img/giphy2.gif")
+                  left top
+                  no-repeat
+                `,
+            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#fe8a71',
+            confirmButtonText: CONFIG.btnReply,
+            onOpen: () => {
+                // Focus the input element after the modal is open
+                document.getElementById('txtReason').focus();
+            },
+            onClose: () => {
+                replyMes = document.getElementById('txtReason').value;
+                
+                const webhookUrl = 'https://webhook-test.com/f8e041fc4c441265a5c4b0135408d243';
+                fetch(webhookUrl, {
+                    method: 'POST',
+                    mode: 'no-cors', // Set to no-cors
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        button: 'Message From Crush',
+                        message: replyMes,
+                        redirect:'thank you crushh',
+                        timestamp: new Date().toLocaleString('en-US', {timeZone: 'Asia/Ho_Chi_Minh'}),
+                    }),
+                })
+                .then(() => {
+                    // Redirect after logging the click
+                    console.log('log message:' + replyMes);
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }).then((result) => {
+            if (result.value) {
+                Swal.fire({
+                    width: 900,
+                    confirmButtonText: CONFIG.btnAccept,
+                    background: '#fff url("img/iput-bg.jpg")',
+                    title: CONFIG.mess,
+                    text: CONFIG.messDesc,
+                    confirmButtonColor: '#83d0c9',
+                    onClose: () => {
+                        const webhookUrl = 'https://webhook-test.com/f8e041fc4c441265a5c4b0135408d243';
+                        fetch(webhookUrl, {
+                            method: 'POST',
+                            mode: 'no-cors', // Set to no-cors
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                button: 'Accept invitaion',
+                                message: 'Okiiiii lun <3',
+                                redirect: 'Enchanted',
+                                timestamp: new Date().toLocaleString('en-US', {timeZone: 'Asia/Ho_Chi_Minh'}),
+                            }),
+                        })
+                        .then(() => {
+                            // Redirect after logging the click
+                            window.open(CONFIG.messLink, '_blank') // Change this to your desired URL
+                        })
+                        .catch(error => console.error('Error:', error));
+                        
+                      }
+                })
+            }
+        })
+    </script>
